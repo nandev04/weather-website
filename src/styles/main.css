@@ -1,0 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand&display=swap');
+
+* {
+  padding: 0;
+  margin: 0;
+  text-decoration: none;
+  list-style: none;
+}
+
+body,
+html {
+  box-sizing: border-box;
+  background-color: #d1cfcf;
+  height: 100%;
+  width: 100vw;
+  padding: 0 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

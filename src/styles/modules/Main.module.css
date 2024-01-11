@@ -1,0 +1,133 @@
+footer {
+  font-family: 'Quicksand', sans-serif;
+  font-size: 0.9rem;
+  font-style: italic;
+  margin-top: 70px;
+}
+
+.container {
+  height: 700px;
+  width: 1200px;
+  background-color: #efefef;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+  height: 100%;
+}
+
+.info {
+  width: 100%;
+  height: 100%;
+  background-color: white;
+}
+
+.info > input {
+  display: block;
+  background-color: #ededef;
+  border: none;
+  height: 20px;
+  border-radius: 15px;
+  margin: 20px auto;
+  grid-column-start: 1;
+  padding: 7px;
+  width: 300px;
+}
+
+.info > input::placeholder {
+  font-size: 0.95rem;
+}
+
+.info > input:focus {
+  outline: none;
+}
+
+.info > img {
+  display: block;
+  height: 150px;
+  margin: 50px auto;
+}
+
+.temperature {
+  display: grid;
+  justify-items: center;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 5.5rem;
+}
+
+.generalInfo {
+  display: grid;
+  font-family: 'Quicksand', sans-serif;
+  font-size: 1.1rem;
+  margin: 10px 0;
+  justify-items: center;
+  font-weight: 400;
+}
+
+.generalInfo::after {
+  display: block;
+  content: '';
+  background-color: #f3f3f3;
+  height: 3px;
+  width: 270px;
+  margin: 20px auto;
+}
+
+.infoDay {
+  display: grid;
+  font-family: 'Quicksand', sans-serif;
+  color: #535353;
+  justify-items: center;
+}
+
+.city {
+  display: grid;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 400;
+  font-size: 2.3rem;
+  margin-top: 50px;
+  justify-content: center;
+}
+
+.navigationDay > ul {
+  display: flex;
+}
+
+.navigationDay > ul > li {
+  color: #aaaaaa;
+  font-size: 1.5rem;
+  font-family: 'Quicksand', sans-serif;
+  margin-right: 15px;
+}
+
+.navigationDay > ul > li.active {
+  color: black;
+}
+
+.moreInfo {
+  padding: 20px;
+}
+
+.gridDetails {
+  display: grid;
+  margin-top: 30px;
+  gap: 30px;
+  row-gap: 45px;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.gridDetails > div {
+  border-radius: 8px;
+  background-color: #748cf1;
+  width: 100%;
+  height: 130px;
+}
+
+.gridDetails > div > h3 {
+  font-family: 'Quicksand', sans-serif;
+  color: #d1d7ee;
+  font-weight: 400;
+  padding: 12px;
+  font-size: 0.8rem;
+}

@@ -118,9 +118,11 @@ footer {
 }
 
 .gridDetails > div {
+  box-sizing: border-box;
   border-radius: 8px;
   background-color: #748cf1;
   width: 100%;
+  padding: 12px;
   height: 130px;
 }
 
@@ -128,6 +130,13 @@ footer {
   font-family: 'Quicksand', sans-serif;
   color: #d1d7ee;
   font-weight: 400;
-  padding: 12px;
   font-size: 0.8rem;
+}
+
+.details {
+  display: grid;
+  font-family: 'Quicksand', sans-serif;
+  color: white;
+  font-size: 1.6rem;
+  margin-top: 20px;
 }

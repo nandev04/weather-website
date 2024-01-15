@@ -21,15 +21,6 @@ const Main = () => {
   const monthNumber = currentDate.getMonth() + 1;
   const year = currentDate.getFullYear();
 
-  function currentLocation() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        setLat(position.coords.latitude);
-        setLong(position.coords.longitude);
-      });
-    }
-  }
-
   function convertNumberToName() {
     switch (monthNumber) {
       case 1:
@@ -71,32 +62,44 @@ const Main = () => {
     }
   }
 
-  async function fetchWeather() {
-    const response = await fetch(
-      lat && long
-        ? `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=cb583e83caade67cb06d84f96762d184&units=metric&exclude=current&lang=pt_br`
-        : 'https://api.openweathermap.org/data/2.5/weather?q=Londres&appid=cb583e83caade67cb06d84f96762d184&units=metric&exclude=current&lang=pt_br',
-    );
-    const json = await response.json();
-    setTemperature(Math.trunc(json.main.temp));
-    setMinTemperature(Math.trunc(json.main.temp_min));
-    setMaxTemperature(Math.trunc(json.main.temp_max));
-    setPressure(json.main.pressure);
-    setHumidity(json.main.humidity);
-    setFeelLike(Math.trunc(json.main.feels_like));
-    setWind(json.wind.speed);
-    setDescription(
-      `${json.weather[0].description
-        .charAt(0)
-        .toUpperCase()}${json.weather[0].description.substring(1)}`,
-    );
-    setCity(json.name);
+  function getCurrentLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        setLat(position.coords.latitude);
+        setLong(position.coords.longitude);
+      });
+    }
+  }
+
+  function fetchCurrentLocation() {
+    fetch(
+      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=cb583e83caade67cb06d84f96762d184&units=metric&exclude=current&lang=pt_br`,
+    )
+      .then((response) => response.json())
+      .then((json) => {
+        setTemperature(Math.trunc(json.main.temp));
+        setMinTemperature(Math.trunc(json.main.temp_min));
+        setMaxTemperature(Math.trunc(json.main.temp_max));
+        setPressure(json.main.pressure);
+        setHumidity(json.main.humidity);
+        setFeelLike(Math.trunc(json.main.feels_like));
+        setWind(json.wind.speed);
+        setDescription(
+          `${json.weather[0].description
+            .charAt(0)
+            .toUpperCase()}${json.weather[0].description.substring(1)}`,
+        );
+        setCity(json.name);
+      });
   }
 
   React.useEffect(() => {
-    currentLocation();
+    fetchCurrentLocation();
+  }, [lat, long]);
+
+  React.useEffect(() => {
     convertNumberToName();
-    fetchWeather();
+    getCurrentLocation();
   }, []);
 
   return (

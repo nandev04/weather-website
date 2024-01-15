@@ -1,20 +1,19 @@
 import React from 'react';
 import style from '../styles/modules/Main.module.css';
-import logo from '../assets/logo.png';
+
+// Colocar ícone do clima
+//`http://openweathermap.org/img/w/${data.weather[0].icon}.png`,
 
 const Main = () => {
-  const [temperature, setTemperature] = React.useState('');
-  const [minTemperature, setMinTemperature] = React.useState('');
-  const [maxTemperature, setMaxTemperature] = React.useState('');
-  const [pressure, setPressure] = React.useState('');
-  const [humidity, setHumidity] = React.useState('');
-  const [feelLike, setFeelLike] = React.useState('');
-  const [wind, setWind] = React.useState('');
-  const [description, setDescription] = React.useState('');
-  const [city, setCity] = React.useState('');
   const [monthName, setMonthName] = React.useState('');
   const [lat, setLat] = React.useState(null);
   const [long, setLong] = React.useState(null);
+  const [weatherImg, setWeatherImg] = React.useState(null);
+
+  // State fetch
+  const [data, setData] = React.useState(null);
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState(null);
 
   const currentDate = new Date();
   const day = currentDate.getDate();
@@ -71,30 +70,30 @@ const Main = () => {
     }
   }
 
-  function fetchCurrentLocation() {
-    fetch(
-      `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=cb583e83caade67cb06d84f96762d184&units=metric&exclude=current&lang=pt_br`,
-    )
-      .then((response) => response.json())
-      .then((json) => {
-        setTemperature(Math.trunc(json.main.temp));
-        setMinTemperature(Math.trunc(json.main.temp_min));
-        setMaxTemperature(Math.trunc(json.main.temp_max));
-        setPressure(json.main.pressure);
-        setHumidity(json.main.humidity);
-        setFeelLike(Math.trunc(json.main.feels_like));
-        setWind(json.wind.speed);
-        setDescription(
-          `${json.weather[0].description
-            .charAt(0)
-            .toUpperCase()}${json.weather[0].description.substring(1)}`,
-        );
-        setCity(json.name);
-      });
+  async function fetchCurrentLocation() {
+    let responseImg;
+    try {
+      setLoading(true);
+      const response = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=cb583e83caade67cb06d84f96762d184&units=metric&exclude=current&lang=pt_br`,
+      );
+      if (!response.ok)
+        throw new Error('Ocorreu um erro ao solicitar os dados');
+      const json = await response.json();
+      setError(null);
+      setData(json);
+    } catch (err) {
+      setError(err);
+      setData(null);
+    } finally {
+      setLoading(false);
+    }
   }
 
+  console.log(data);
+
   React.useEffect(() => {
-    fetchCurrentLocation();
+    if (lat && long) fetchCurrentLocation();
   }, [lat, long]);
 
   React.useEffect(() => {
@@ -107,9 +106,14 @@ const Main = () => {
       <div className={style.grid}>
         <main className={style.info}>
           <input type="text" placeholder="Pesquise sua cidade" />
-          <img src={logo} alt="Imagem representando o clima" />
-          <p className={style.temperature}>{temperature}°C</p>
-          <p className={style.generalInfo}>{description}</p>
+          <p className={style.temperature}>
+            {data && Math.trunc(data.main.temp)}°C
+          </p>
+          <p className={style.generalInfo}>
+            {data &&
+              data.weather[0].description.charAt(0).toUpperCase() +
+                data.weather[0].description.slice(1)}
+          </p>
           <div className={style.infoDay}>
             <p className={style.date}>
               {day && day}-{monthName && monthName}-{year && year}
@@ -117,7 +121,9 @@ const Main = () => {
             <p>Friday, 12:44 PM</p>
             <p>Day</p>
           </div>
-          <h2 className={style.city}>{city}</h2>
+          <h2 className={style.city}>
+            {data && data.name} {error && error.toString()}
+          </h2>
         </main>
         <section className={style.moreInfo}>
           <header className={style.navigationDay}>
@@ -129,32 +135,34 @@ const Main = () => {
             <div>
               <h3>Wind</h3>
               <p className={style.details}>
-                {Math.trunc(wind && wind * 3.6)} km/h
+                {Math.trunc(data && data.wind.speed * 3.6)} km/h
               </p>
             </div>
             <div>
-              <h3>Humidity</h3>
-              <p className={style.details}>{humidity && humidity}%</p>
+              <h3>Humidade</h3>
+              <p className={style.details}>{data && data.main.humidity}%</p>
             </div>
             <div>
               <h3>Real Feel</h3>
-              <p className={style.details}>{feelLike && feelLike}°C</p>
+              <p className={style.details}>
+                {Math.trunc(data && data.main.feels_like)}°C
+              </p>
             </div>
             <div>
               <h3>Temperatura mínima</h3>
               <p className={style.details}>
-                {minTemperature && minTemperature}°C
+                {Math.trunc(data && data.main.temp_min)}°C
               </p>
             </div>
             <div>
               <h3>Temperatura máxima</h3>
               <p className={style.details}>
-                {maxTemperature && maxTemperature}°C
+                {Math.trunc(data && data.main.temp_max)}°C
               </p>
             </div>
             <div>
               <h3>Pressão</h3>
-              <p className={style.details}>{pressure && pressure} hPa</p>
+              <p className={style.details}>{data && data.main.pressure} hPa</p>
             </div>
           </div>
           <footer>Todos os dados fornecidos pelo OpenWeather</footer>

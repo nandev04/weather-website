@@ -8,19 +8,42 @@ const Main = () => {
   const [monthName, setMonthName] = React.useState('');
   const [lat, setLat] = React.useState(null);
   const [long, setLong] = React.useState(null);
-  const [weatherImg, setWeatherImg] = React.useState(null);
 
   // State fetch
   const [data, setData] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
+  const [dayPeriod, setDayPeriod] = React.useState(null);
 
+  // Get dates and hours
   const currentDate = new Date();
   const day = currentDate.getDate();
   const monthNumber = currentDate.getMonth() + 1;
   const year = currentDate.getFullYear();
 
+  const weekDay = [
+    'Domingo',
+    'Segunda-feira',
+    'Terça-feira',
+    'Quarta-feira',
+    'Quinta-feira',
+    'Sexta-feira',
+    'Sábado',
+  ];
+
+  const hour = currentDate.getHours();
+  const dayName = currentDate.getDay();
+  const minutes = currentDate.getMinutes();
+
   function convertNumberToName() {
+    if (hour >= 6 && hour < 12) {
+      setDayPeriod('Manhã');
+    } else if (hour >= 12 && hour < 18) {
+      setDayPeriod('Tarde');
+    } else {
+      setDayPeriod('Noite');
+    }
+
     switch (monthNumber) {
       case 1:
         setMonthName('Janeiro');
@@ -71,8 +94,8 @@ const Main = () => {
   }
 
   async function fetchCurrentLocation() {
-    let responseImg;
     try {
+      setData(null);
       setLoading(true);
       const response = await fetch(
         `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=cb583e83caade67cb06d84f96762d184&units=metric&exclude=current&lang=pt_br`,
@@ -90,8 +113,6 @@ const Main = () => {
     }
   }
 
-  console.log(data);
-
   React.useEffect(() => {
     if (lat && long) fetchCurrentLocation();
   }, [lat, long]);
@@ -106,24 +127,37 @@ const Main = () => {
       <div className={style.grid}>
         <main className={style.info}>
           <input type="text" placeholder="Pesquise sua cidade" />
-          <p className={style.temperature}>
-            {data && Math.trunc(data.main.temp)}°C
-          </p>
-          <p className={style.generalInfo}>
-            {data &&
-              data.weather[0].description.charAt(0).toUpperCase() +
-                data.weather[0].description.slice(1)}
-          </p>
-          <div className={style.infoDay}>
-            <p className={style.date}>
-              {day && day}-{monthName && monthName}-{year && year}
+          <div className={style.mainInfo}>
+            <p className={style.temperature}>
+              {loading && <span className={style.loader}></span>}
+              {data && Math.trunc(data.main.temp) + '°C'}
             </p>
-            <p>Friday, 12:44 PM</p>
-            <p>Day</p>
+            <p className={style.generalInfo}>
+              {data &&
+                `${data.weather[0].description
+                  .charAt(0)
+                  .toUpperCase()}${data.weather[0].description.slice(1)}
+                  `}
+              {data && (
+                <img
+                  src={`https://openweathermap.org/img/wn/${data.weather[0].icon}.png`}
+                  alt="Imagem ilustrativa sobre o clima atual"
+                />
+              )}
+            </p>
+            <div className={style.infoDay}>
+              <p className={style.date}>
+                {day && day}-{monthName && monthName}-{year && year}
+              </p>
+              <p>
+                {weekDay[dayName]}, {hour}:{minutes.toString().padStart(2, '0')}
+              </p>
+              <p>{dayPeriod}</p>
+            </div>
+            <h2 className={style.city}>
+              {data && data.name} {error && error.toString()}
+            </h2>
           </div>
-          <h2 className={style.city}>
-            {data && data.name} {error && error.toString()}
-          </h2>
         </main>
         <section className={style.moreInfo}>
           <header className={style.navigationDay}>
@@ -133,36 +167,48 @@ const Main = () => {
           </header>
           <div className={style.gridDetails}>
             <div>
-              <h3>Wind</h3>
+              <h3>Velocidade do vento</h3>
               <p className={style.details}>
-                {Math.trunc(data && data.wind.speed * 3.6)} km/h
+                {loading && <span className={style.loader}></span>}
+                {data && Math.trunc(data.wind.speed * 3.6) + ' km/h'}
               </p>
             </div>
             <div>
               <h3>Humidade</h3>
-              <p className={style.details}>{data && data.main.humidity}%</p>
+
+              <p className={style.details}>
+                {loading && <span className={style.loader}></span>}
+                {data && data.main.humidity + '%'}
+              </p>
             </div>
             <div>
               <h3>Real Feel</h3>
               <p className={style.details}>
-                {Math.trunc(data && data.main.feels_like)}°C
+                {loading && <span className={style.loader}></span>}
+                {data && Math.trunc(data.main.feels_like) + '°C'}
               </p>
             </div>
             <div>
               <h3>Temperatura mínima</h3>
               <p className={style.details}>
-                {Math.trunc(data && data.main.temp_min)}°C
+                {loading && <span className={style.loader}></span>}
+                {data && Math.trunc(data.main.temp_min) + '°C'}
               </p>
             </div>
             <div>
               <h3>Temperatura máxima</h3>
               <p className={style.details}>
-                {Math.trunc(data && data.main.temp_max)}°C
+                {loading && <span className={style.loader}></span>}
+                {data && Math.trunc(data.main.temp_max) + '°C'}
               </p>
             </div>
             <div>
               <h3>Pressão</h3>
-              <p className={style.details}>{data && data.main.pressure} hPa</p>
+
+              <p className={style.details}>
+                {loading && <span className={style.loader}></span>}
+                {data && data.main.pressure + ' hPa'}{' '}
+              </p>
             </div>
           </div>
           <footer>Todos os dados fornecidos pelo OpenWeather</footer>

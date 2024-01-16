@@ -21,7 +21,12 @@ footer {
   background-color: white;
 }
 
-.info > input {
+.containerSearch {
+  position: relative;
+  display: block;
+}
+
+.searchInput {
   display: block;
   background-color: #ededef;
   border: none;
@@ -33,12 +38,23 @@ footer {
   width: 340px;
 }
 
-.info > input::placeholder {
+.searchInput {
   font-size: 0.95rem;
 }
 
-.info > input:focus {
+.searchInput {
   outline: none;
+}
+
+.searchEnter {
+  position: absolute;
+  top: 0;
+  right: 70px;
+  background: url('../../assets/search.svg') no-repeat center;
+  background-size: 30px;
+  cursor: pointer;
+  border: none;
+  padding: 20px;
 }
 
 .mainInfo {

@@ -1,13 +1,14 @@
 import React from 'react';
 import style from '../styles/modules/Main.module.css';
 
-// Colocar ícone do clima
-//`http://openweathermap.org/img/w/${data.weather[0].icon}.png`,
-
 const Main = () => {
   const [monthName, setMonthName] = React.useState('');
   const [lat, setLat] = React.useState(null);
   const [long, setLong] = React.useState(null);
+
+  // State search
+  const [city, setCity] = React.useState(null);
+  console.log(city);
 
   // State fetch
   const [data, setData] = React.useState(null);
@@ -113,6 +114,24 @@ const Main = () => {
     }
   }
 
+  async function fetchSpecificCity() {
+    try {
+      setData(null);
+      setLoading(true);
+      const response = await fetch(`//Arrumar o erro aqui`);
+      if (!response.ok)
+        throw new Error('Ocorreu um erro ao solicitar os dados');
+      const json = await response.json();
+      setError(null);
+      setData(json);
+    } catch (err) {
+      setError(err);
+      setData(null);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   React.useEffect(() => {
     if (lat && long) fetchCurrentLocation();
   }, [lat, long]);
@@ -126,7 +145,16 @@ const Main = () => {
     <div className={style.container}>
       <div className={style.grid}>
         <main className={style.info}>
-          <input type="text" placeholder="Pesquise sua cidade" />
+          <form className={style.containerSearch} onSubmit={fetchSpecificCity}>
+            <input
+              type="text"
+              placeholder="Pesquise sua cidade"
+              className={style.searchInput}
+              onChange={({ target }) => setCity(target.value)}
+            />
+            <button className={style.searchEnter}></button>
+          </form>
+
           <div className={style.mainInfo}>
             <p className={style.temperature}>
               {loading && <span className={style.loader}></span>}
@@ -146,6 +174,7 @@ const Main = () => {
               )}
             </p>
             <div className={style.infoDay}>
+              {data && <p>Ultima atualização em:</p>}
               <p className={style.date}>
                 {day && day}-{monthName && monthName}-{year && year}
               </p>

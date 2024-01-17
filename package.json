@@ -2,7 +2,7 @@
   "name": "weatherwebsite",
   "private": true,
   "version": "0.0.0",
-  "homepage": "weatherWebsite/",
+  "homepage": "https://nandev04.github.io/weatherWebsite/",
   "type": "module",
   "scripts": {
     "dev": "vite",

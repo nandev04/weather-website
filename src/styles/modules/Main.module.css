@@ -1,3 +1,12 @@
+@import url('../animations/loading.css');
+
+body {
+  padding: 0 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 footer {
   font-family: 'Quicksand', sans-serif;
   font-size: 0.9rem;
@@ -8,6 +17,7 @@ footer {
 .container {
   height: 700px;
   width: 1200px;
+  max-width: 100%;
   background-color: #efefef;
 }
 
@@ -15,27 +25,31 @@ footer {
   display: grid;
   grid-template-columns: 2fr 3fr;
   height: 100%;
+  /* max-width: 100%; */
 }
 
 .info {
   background-color: white;
+  height: 100%;
 }
 
 .containerSearch {
   position: relative;
-  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0px 20px;
 }
 
 .searchInput {
-  display: block;
+  box-sizing: border-box;
   background-color: #ededef;
   border: none;
-  height: 25px;
+  height: 32px;
   border-radius: 15px;
   margin: 20px auto;
   grid-column-start: 1;
-  padding: 7px;
-  width: 340px;
+  padding: 10px;
+  width: 100%;
 }
 
 .searchInput {
@@ -48,10 +62,11 @@ footer {
 
 .searchEnter {
   position: absolute;
-  top: 0;
-  right: 70px;
   background: url('../../assets/search.svg') no-repeat center;
-  background-size: 30px;
+  top: 50%;
+  right: 30px;
+  transform: translateY(-50%);
+  background-size: 27px;
   cursor: pointer;
   border: none;
   padding: 20px;
@@ -76,16 +91,18 @@ footer {
   font-family: 'Quicksand', sans-serif;
   font-size: 1.1rem;
   margin: 10px 0;
+  padding: 0 40px;
   justify-items: center;
   font-weight: 400;
 }
 
 .generalInfo::after {
+  box-sizing: border-box;
   display: block;
   content: '';
   background-color: #f3f3f3;
   height: 3px;
-  width: 270px;
+  width: 100%;
   margin: 20px auto;
 }
 
@@ -122,6 +139,7 @@ footer {
 }
 
 .moreInfo {
+  max-height: 100%;
   padding: 20px;
 }
 
@@ -179,26 +197,59 @@ footer {
   animation: prixClipFix 2s linear infinite;
 }
 
-@keyframes rotate {
-  100% {
-    transform: rotate(360deg);
+/* Responsive Layout */
+@media (max-width: 970px) {
+  .city {
+    font-size: 1.8rem;
   }
-}
 
-@keyframes prixClipFix {
-  0% {
-    clip-path: polygon(50% 50%, 0 0, 0 0, 0 0, 0 0, 0 0);
+  .gridDetails {
+    grid-template-columns: 1fr 1fr;
   }
-  25% {
-    clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 0, 100% 0, 100% 0);
+
+  .gridDetails > div {
+    height: 100px;
   }
-  50% {
-    clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 100% 100%, 100% 100%);
+
+  .gridDetails > h3 {
+    font-size: 0.6rem;
   }
-  75% {
-    clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 100%);
+
+  .details {
+    margin-top: 10px;
   }
-  100% {
-    clip-path: polygon(50% 50%, 0 0, 100% 0, 100% 100%, 0 100%, 0 0);
+
+  @media (max-width: 700px) {
+    .info {
+      padding-bottom: 20px;
+    }
+
+    .gridDetails {
+      grid-template-columns: 1fr 1fr;
+      max-height: 100%;
+    }
+
+    .gridDetails > div {
+      height: auto;
+    }
+
+    .grid {
+      grid-template-columns: 1fr;
+    }
+
+    .container {
+      width: 100vw;
+      height: auto;
+      min-height: 100%;
+    }
+
+    .navigationDay > ul > li {
+      padding-top: 30px;
+    }
+
+    body {
+      padding: 0;
+      align-items: stretch;
+    }
   }
 }

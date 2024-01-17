@@ -1,3 +1,12 @@
+@import url('../animations/loading.css');
+
+body {
+  padding: 0 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 footer {
   font-family: 'Quicksand', sans-serif;
   font-size: 0.9rem;
@@ -8,6 +17,7 @@ footer {
 .container {
   height: 700px;
   width: 1200px;
+  max-width: 100%;
   background-color: #efefef;
 }
 
@@ -15,38 +25,58 @@ footer {
   display: grid;
   grid-template-columns: 2fr 3fr;
   height: 100%;
+  /* max-width: 100%; */
 }
 
 .info {
-  width: 100%;
-  height: 100%;
   background-color: white;
+  height: 100%;
 }
 
-.info > input {
-  display: block;
+.containerSearch {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  padding: 0px 20px;
+}
+
+.searchInput {
+  box-sizing: border-box;
   background-color: #ededef;
   border: none;
-  height: 20px;
+  height: 32px;
   border-radius: 15px;
   margin: 20px auto;
   grid-column-start: 1;
-  padding: 7px;
-  width: 300px;
+  padding: 10px;
+  width: 100%;
 }
 
-.info > input::placeholder {
-  font-size: 0.95rem;
+.searchInput {
+  font-size: 0.9rem;
 }
 
-.info > input:focus {
+.searchInput {
   outline: none;
 }
 
-.info > img {
-  display: block;
-  height: 150px;
-  margin: 50px auto;
+.searchEnter {
+  position: absolute;
+  background: url('../../assets/search.svg') no-repeat center;
+  top: 50%;
+  right: 30px;
+  transform: translateY(-50%);
+  background-size: 27px;
+  cursor: pointer;
+  border: none;
+  padding: 20px;
+}
+
+.mainInfo {
+  display: grid;
+  height: calc(100% - 79px);
+  max-height: 100%;
+  align-content: center;
 }
 
 .temperature {
@@ -61,16 +91,18 @@ footer {
   font-family: 'Quicksand', sans-serif;
   font-size: 1.1rem;
   margin: 10px 0;
+  padding: 0 40px;
   justify-items: center;
   font-weight: 400;
 }
 
 .generalInfo::after {
+  box-sizing: border-box;
   display: block;
   content: '';
   background-color: #f3f3f3;
   height: 3px;
-  width: 270px;
+  width: 100%;
   margin: 20px auto;
 }
 
@@ -88,6 +120,7 @@ footer {
   font-size: 2.3rem;
   margin-top: 50px;
   justify-content: center;
+  text-align: center;
 }
 
 .navigationDay > ul {
@@ -106,6 +139,7 @@ footer {
 }
 
 .moreInfo {
+  max-height: 100%;
   padding: 20px;
 }
 
@@ -118,9 +152,11 @@ footer {
 }
 
 .gridDetails > div {
+  box-sizing: border-box;
   border-radius: 8px;
   background-color: #748cf1;
   width: 100%;
+  padding: 12px;
   height: 130px;
 }
 
@@ -128,6 +164,92 @@ footer {
   font-family: 'Quicksand', sans-serif;
   color: #d1d7ee;
   font-weight: 400;
-  padding: 12px;
   font-size: 0.8rem;
+}
+
+.details {
+  display: grid;
+  font-family: 'Quicksand', sans-serif;
+  color: white;
+  font-size: 1.6rem;
+  margin-top: 20px;
+}
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  position: relative;
+  animation: rotate 1s linear infinite;
+}
+
+.temperature .loader::before {
+  border: 5px solid black;
+}
+
+.loader::before {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  inset: 0px;
+  border-radius: 50%;
+  border: 5px solid #fff;
+  animation: prixClipFix 2s linear infinite;
+}
+
+/* Responsive Layout */
+@media (max-width: 970px) {
+  .city {
+    font-size: 1.8rem;
+  }
+
+  .gridDetails {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .gridDetails > div {
+    height: 100px;
+  }
+
+  .gridDetails > h3 {
+    font-size: 0.6rem;
+  }
+
+  .details {
+    margin-top: 10px;
+  }
+
+  @media (max-width: 700px) {
+    .info {
+      padding-bottom: 20px;
+    }
+
+    .gridDetails {
+      grid-template-columns: 1fr 1fr;
+      max-height: 100%;
+    }
+
+    .gridDetails > div {
+      height: auto;
+    }
+
+    .grid {
+      grid-template-columns: 1fr;
+    }
+
+    .container {
+      width: 100vw;
+      height: auto;
+      min-height: 100%;
+    }
+
+    .navigationDay > ul > li {
+      padding-top: 30px;
+    }
+
+    body {
+      padding: 0;
+      align-items: stretch;
+    }
+  }
 }

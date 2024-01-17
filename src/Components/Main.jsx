@@ -7,8 +7,7 @@ const Main = () => {
   const [long, setLong] = React.useState(null);
 
   // State search
-  const [city, setCity] = React.useState(null);
-  console.log(city);
+  const [address, setAddress] = React.useState(null);
 
   // State fetch
   const [data, setData] = React.useState(null);
@@ -114,16 +113,21 @@ const Main = () => {
     }
   }
 
+  console.log(address);
+
   async function fetchSpecificCity() {
     try {
       setData(null);
       setLoading(true);
-      const response = await fetch(`//Arrumar o erro aqui`);
+      const response = await fetch(
+        `https://api.openweathermap.org/data/2.5/weather?q=${address[0]},${address[1]},${address[2]}&appid=cb583e83caade67cb06d84f96762d184&units=metric&exclude=current&lang=pt_br`,
+      );
       if (!response.ok)
         throw new Error('Ocorreu um erro ao solicitar os dados');
       const json = await response.json();
       setError(null);
       setData(json);
+      console.log(data);
     } catch (err) {
       setError(err);
       setData(null);
@@ -145,12 +149,18 @@ const Main = () => {
     <div className={style.container}>
       <div className={style.grid}>
         <main className={style.info}>
-          <form className={style.containerSearch} onSubmit={fetchSpecificCity}>
+          <form
+            className={style.containerSearch}
+            onSubmit={(event) => {
+              event.preventDefault();
+              fetchSpecificCity();
+            }}
+          >
             <input
               type="text"
-              placeholder="Pesquise sua cidade"
+              placeholder={'City, State, Country'}
               className={style.searchInput}
-              onChange={({ target }) => setCity(target.value)}
+              onChange={({ target }) => setAddress(target.value.split(','))}
             />
             <button className={style.searchEnter}></button>
           </form>
@@ -184,7 +194,8 @@ const Main = () => {
               <p>{dayPeriod}</p>
             </div>
             <h2 className={style.city}>
-              {data && data.name} {error && error.toString()}
+              {data && data.name}
+              {error && error.toString()}
             </h2>
           </div>
         </main>

@@ -1,22 +1,24 @@
 import React from 'react';
 import style from '../styles/modules/Main.module.css';
 import Details from './Details';
+import useCurrentLocationFetch from '../customHooks/useCurrentLocationFetch';
+import useCustomFetch from '../customHooks/useCustomFetch';
 
 const Main = () => {
   const [monthName, setMonthName] = React.useState('');
   const [lat, setLat] = React.useState(null);
   const [long, setLong] = React.useState(null);
 
-  // State search
+  // States fetch
   const [address, setAddress] = React.useState(null);
 
-  // State fetch
-  const [data, setData] = React.useState(null);
-  const [loading, setLoading] = React.useState(false);
-  const [error, setError] = React.useState(null);
-  const [dayPeriod, setDayPeriod] = React.useState(null);
+  //Fetch hooks
+  const { autoRequest, data, setData, loading, setLoading, error, setError } =
+    useCurrentLocationFetch(lat, long);
+  const { request } = useCustomFetch();
 
   // Get dates and hours
+  const [dayPeriod, setDayPeriod] = React.useState(null);
   const currentDate = new Date();
   const day = currentDate.getDate();
   const monthNumber = currentDate.getMonth() + 1;
@@ -87,59 +89,38 @@ const Main = () => {
 
   function getCurrentLocation() {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        setLat(position.coords.latitude);
-        setLong(position.coords.longitude);
-      });
-    }
-  }
-
-  async function fetchCurrentLocation() {
-    try {
-      setData(null);
-      setLoading(true);
-      const response = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${long}&appid=cb583e83caade67cb06d84f96762d184&units=metric&exclude=current&lang=pt_br`,
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLat(position.coords.latitude);
+          setLong(position.coords.longitude);
+        },
+        (error) => {
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              alert(
+                'Permissão para acessar a localização foi negada. Permita o acesso ou pesquise sua cidade na barra de busca.',
+              );
+              break;
+            case error.POSITION_UNAVAILABLE:
+              setError('Informações de localização não estão disponíveis.');
+              break;
+            case error.TIMEOUT:
+              setError(
+                'A solicitação para obter a localização do usuário expirou.',
+              );
+              break;
+            case error.UNKNOWN_ERROR:
+              setError('Ocorreu um erro desconhecido ao obter a localização.');
+              break;
+          }
+        },
       );
-      if (!response.ok)
-        throw new Error('Ocorreu um erro ao solicitar os dados');
-      const json = await response.json();
-      setError(null);
-      setData(json);
-    } catch (err) {
-      setError(err);
-      setData(null);
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  console.log(address);
-
-  async function fetchSpecificCity() {
-    try {
-      setData(null);
-      setLoading(true);
-      const response = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?q=${address[0]},${address[1]},${address[2]}&appid=cb583e83caade67cb06d84f96762d184&units=metric&exclude=current&lang=pt_br`,
-      );
-      if (!response.ok)
-        throw new Error('Ocorreu um erro ao solicitar os dados');
-      const json = await response.json();
-      setError(null);
-      setData(json);
-      console.log(data);
-    } catch (err) {
-      setError(err);
-      setData(null);
-    } finally {
-      setLoading(false);
     }
   }
 
   React.useEffect(() => {
-    if (lat && long) fetchCurrentLocation();
-  }, [lat, long]);
+    if (lat && long) autoRequest(lat, long, setError, setLoading, setData);
+  }, [lat && long]);
 
   React.useEffect(() => {
     convertNumberToName();
@@ -154,7 +135,7 @@ const Main = () => {
             className={style.containerSearch}
             onSubmit={(event) => {
               event.preventDefault();
-              fetchSpecificCity();
+              request(setData, setError, setLoading, address);
             }}
           >
             <input

@@ -87,10 +87,32 @@ const Main = () => {
 
   function getCurrentLocation() {
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        setLat(position.coords.latitude);
-        setLong(position.coords.longitude);
-      });
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLat(position.coords.latitude);
+          setLong(position.coords.longitude);
+        },
+        (error) => {
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              setError(
+                'Permissão para acessar a localização foi negada, permita o acesso ou pesquise sua cidade na barra de busca.',
+              );
+              break;
+            case error.POSITION_UNAVAILABLE:
+              setError('Informações de localização não estão disponíveis.');
+              break;
+            case error.TIMEOUT:
+              setError(
+                'A solicitação para obter a localização do usuário expirou.',
+              );
+              break;
+            case error.UNKNOWN_ERROR:
+              setError('Ocorreu um erro desconhecido ao obter a localização.');
+              break;
+          }
+        },
+      );
     }
   }
 
@@ -113,8 +135,6 @@ const Main = () => {
       setLoading(false);
     }
   }
-
-  console.log(address);
 
   async function fetchSpecificCity() {
     try {

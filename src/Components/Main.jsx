@@ -1,5 +1,6 @@
 import React from 'react';
 import style from '../styles/modules/Main.module.css';
+import Details from './Details';
 
 const Main = () => {
   const [monthName, setMonthName] = React.useState('');
@@ -206,50 +207,47 @@ const Main = () => {
             </ul>
           </header>
           <div className={style.gridDetails}>
-            <div>
-              <h3>Velocidade do vento</h3>
-              <p className={style.details}>
-                {loading && <span className={style.loader}></span>}
-                {data && Math.trunc(data.wind.speed * 3.6) + ' km/h'}
-              </p>
-            </div>
-            <div>
-              <h3>Humidade</h3>
+            <Details
+              title={'Velocidade do vento'}
+              info={data && Math.trunc(data.wind.speed * 3.6)}
+              character={' km/h'}
+              loading={loading}
+            />
 
-              <p className={style.details}>
-                {loading && <span className={style.loader}></span>}
-                {data && data.main.humidity + '%'}
-              </p>
-            </div>
-            <div>
-              <h3>Real Feel</h3>
-              <p className={style.details}>
-                {loading && <span className={style.loader}></span>}
-                {data && Math.trunc(data.main.feels_like) + '°C'}
-              </p>
-            </div>
-            <div>
-              <h3>Temperatura mínima</h3>
-              <p className={style.details}>
-                {loading && <span className={style.loader}></span>}
-                {data && Math.trunc(data.main.temp_min) + '°C'}
-              </p>
-            </div>
-            <div>
-              <h3>Temperatura máxima</h3>
-              <p className={style.details}>
-                {loading && <span className={style.loader}></span>}
-                {data && Math.trunc(data.main.temp_max) + '°C'}
-              </p>
-            </div>
-            <div>
-              <h3>Pressão</h3>
+            <Details
+              title={'Humidade'}
+              info={data && data.main.humidity}
+              character={'%'}
+              loading={loading}
+            />
 
-              <p className={style.details}>
-                {loading && <span className={style.loader}></span>}
-                {data && data.main.pressure + ' hPa'}{' '}
-              </p>
-            </div>
+            <Details
+              title={'Sensação térmica'}
+              info={data && Math.trunc(data.main.feels_like)}
+              character={'°C'}
+              loading={loading}
+            />
+
+            <Details
+              title={'Temperatura mínima'}
+              info={data && Math.trunc(data.main.temp_min)}
+              character={'°C'}
+              loading={loading}
+            />
+
+            <Details
+              title={'Temperatura máxima'}
+              info={data && Math.trunc(data.main.temp_max)}
+              character={'°C'}
+              loading={loading}
+            />
+
+            <Details
+              title={'Pressão'}
+              info={data && data.main.pressure}
+              character={'  hPa'}
+              loading={loading}
+            />
           </div>
           <footer>Todos os dados fornecidos pelo OpenWeather</footer>
         </section>

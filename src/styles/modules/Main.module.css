@@ -5,6 +5,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  background-color: #d1cfcf;
 }
 
 footer {
@@ -25,7 +26,6 @@ footer {
   display: grid;
   grid-template-columns: 2fr 3fr;
   height: 100%;
-  /* max-width: 100%; */
 }
 
 .info {
@@ -139,6 +139,7 @@ footer {
 }
 
 .moreInfo {
+  box-sizing: border-box;
   max-height: 100%;
   padding: 20px;
 }
@@ -149,30 +150,6 @@ footer {
   gap: 30px;
   row-gap: 45px;
   grid-template-columns: 1fr 1fr 1fr;
-}
-
-.gridDetails > div {
-  box-sizing: border-box;
-  border-radius: 8px;
-  background-color: #748cf1;
-  width: 100%;
-  padding: 12px;
-  height: 130px;
-}
-
-.gridDetails > div > h3 {
-  font-family: 'Quicksand', sans-serif;
-  color: #d1d7ee;
-  font-weight: 400;
-  font-size: 0.8rem;
-}
-
-.details {
-  display: grid;
-  font-family: 'Quicksand', sans-serif;
-  color: white;
-  font-size: 1.6rem;
-  margin-top: 20px;
 }
 
 .loader {
@@ -207,19 +184,19 @@ footer {
     grid-template-columns: 1fr 1fr;
   }
 
-  .gridDetails > div {
-    height: 100px;
-  }
-
-  .gridDetails > h3 {
-    font-size: 0.6rem;
-  }
-
   .details {
     margin-top: 10px;
   }
 
   @media (max-width: 700px) {
+    body {
+      background-color: #efefef;
+    }
+
+    .container {
+      min-height: 100vh;
+    }
+
     .info {
       padding-bottom: 20px;
     }
@@ -229,18 +206,14 @@ footer {
       max-height: 100%;
     }
 
-    .gridDetails > div {
-      height: auto;
-    }
-
     .grid {
       grid-template-columns: 1fr;
     }
 
     .container {
+      box-sizing: border-box;
       width: 100vw;
-      height: auto;
-      min-height: 100%;
+      height: 100vw;
     }
 
     .navigationDay > ul > li {

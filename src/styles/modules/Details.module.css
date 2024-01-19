@@ -1,0 +1,63 @@
+@import url('../animations/loading.css');
+
+.containerDetails {
+  box-sizing: border-box;
+  border-radius: 8px;
+  background-color: #748cf1;
+  width: 100%;
+  padding: 12px;
+  height: 130px;
+}
+
+.containerDetails > h3 {
+  font-family: 'Quicksand', sans-serif;
+  color: #d1d7ee;
+  font-weight: 400;
+  font-size: 0.8rem;
+}
+
+.details {
+  display: grid;
+  font-family: 'Quicksand', sans-serif;
+  color: white;
+  font-size: 1.6rem;
+  margin-top: 20px;
+}
+
+.loader {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  position: relative;
+  animation: rotate 1s linear infinite;
+}
+
+.temperature .loader::before {
+  border: 5px solid black;
+}
+
+.loader::before {
+  content: '';
+  box-sizing: border-box;
+  position: absolute;
+  inset: 0px;
+  border-radius: 50%;
+  border: 5px solid #fff;
+  animation: prixClipFix 2s linear infinite;
+}
+
+@media (max-width: 970px) {
+  .details {
+    margin-top: 10px;
+  }
+
+  .containerDetails {
+    height: 100px;
+  }
+}
+
+@media (max-width: 700px) {
+  .containerDetails {
+    height: auto;
+  }
+}

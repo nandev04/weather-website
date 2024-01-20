@@ -1,6 +1,6 @@
 import React from 'react';
 
-const useCurrentLocationFetch = () => {
+const useFetchCurrentLocationFetch = () => {
   const [data, setData] = React.useState(null);
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState(null);
@@ -36,4 +36,4 @@ const useCurrentLocationFetch = () => {
   };
 };
 
-export default useCurrentLocationFetch;
+export default useFetchCurrentLocationFetch;

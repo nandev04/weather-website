@@ -1,19 +1,21 @@
 import React from 'react';
 import style from '../styles/modules/Main.module.css';
 import Details from './Details';
-import useCurrentLocationFetch from '../customHooks/useCurrentLocationFetch';
+import useFetchCurrentLocationFetch from '../customHooks/useFetchCurrentLocationFetch';
 import useCustomFetch from '../customHooks/useCustomFetch';
 import useDates from '../customHooks/useDates';
+import useGetCurrentLocation from '../customHooks/useGetCurrentLocation';
 
 const Main = () => {
   // State fetch
-  const [lat, setLat] = React.useState(null);
-  const [long, setLong] = React.useState(null);
   const [address, setAddress] = React.useState(null);
+
+  // Get Current Location hook
+  const { requestGetCurrentLocation, lat, long } = useGetCurrentLocation();
 
   //Fetch hooks
   const { autoRequest, data, setData, loading, setLoading, error, setError } =
-    useCurrentLocationFetch(lat, long);
+    useFetchCurrentLocationFetch(lat, long);
   const { request } = useCustomFetch();
 
   // Date hook
@@ -29,44 +31,13 @@ const Main = () => {
     weekDay,
   } = useDates();
 
-  function getCurrentLocation() {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setLat(position.coords.latitude);
-          setLong(position.coords.longitude);
-        },
-        (error) => {
-          switch (error.code) {
-            case error.PERMISSION_DENIED:
-              alert(
-                'Permissão para acessar a localização foi negada. Permita o acesso ou pesquise sua cidade na barra de busca.',
-              );
-              break;
-            case error.POSITION_UNAVAILABLE:
-              setError('Informações de localização não estão disponíveis.');
-              break;
-            case error.TIMEOUT:
-              setError(
-                'A solicitação para obter a localização do usuário expirou.',
-              );
-              break;
-            case error.UNKNOWN_ERROR:
-              setError('Ocorreu um erro desconhecido ao obter a localização.');
-              break;
-          }
-        },
-      );
-    }
-  }
-
   React.useEffect(() => {
     if (lat && long) autoRequest(lat, long, setError, setLoading, setData);
   }, [lat && long]);
 
   React.useEffect(() => {
     requestDate();
-    getCurrentLocation();
+    requestGetCurrentLocation();
   }, []);
 
   return (
